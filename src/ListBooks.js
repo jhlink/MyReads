@@ -10,7 +10,7 @@ class ListBooks extends Component {
 
   render() {
 
-    const { bookArray } = this.props
+    const { bookArray, updateBookInServer } = this.props
 
     let currentlyReadingBooks =  bookArray.filter((book) => book.shelf === "currentlyReading")
     let wantToReadBooks =  bookArray.filter((book) => book.shelf === "wantToRead")
@@ -23,9 +23,9 @@ class ListBooks extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            <Bookshelf shelfTitle="Currently Reading" books={currentlyReadingBooks} />
-            <Bookshelf shelfTitle="Want to Read" books={wantToReadBooks} />
-            <Bookshelf shelfTitle="Read" books={readBooks} />
+            <Bookshelf shelfTitle="Currently Reading" books={currentlyReadingBooks} updateBookRequest={updateBookInServer} />
+            <Bookshelf shelfTitle="Want to Read" books={wantToReadBooks} updateBookRequest={updateBookInServer} />
+            <Bookshelf shelfTitle="Read" books={readBooks} updateBookRequest={updateBookInServer} />
           </div>
         </div>
         <div className="open-search">

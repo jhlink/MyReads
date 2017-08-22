@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import ListBooks from './ListBooks'
 import SearchBooks from './SearchBooks'
 import * as BooksAPI from './BooksAPI'
+import update from 'immutability-helper'
+
 import './App.css'
 
 class BooksApp extends Component {
@@ -23,6 +25,19 @@ class BooksApp extends Component {
       })
   }
 
+  onUpdate = (book, shelf) => {
+    BooksAPI.update(book, shelf)
+      .then(() => {
+        this.setState((state) => ({
+          /* FLAG: Is this truly the best way to update a state?
+          *  There is a mix of solutions from using map to immutability-helper.
+          *  What is a good rule of thumb here?
+          */
+          books: state.books.map((c) => c.id === book.id ? update(c, {shelf: {$set: shelf}}) : c)
+      }))
+    })
+  }
+
   render() {
     const { books } = this.state
 
@@ -31,7 +46,7 @@ class BooksApp extends Component {
         {this.state.showSearchPage ?
           <SearchBooks />
           :
-          <ListBooks bookArray={books} />
+          <ListBooks bookArray={books} updateBookInServer={this.onUpdate} />
         }
       </div>
     )

@@ -9,14 +9,14 @@ class Book extends Component {
 
   render() {
 
-    const { bookData } = this.props
+    const { bookData, updateBook } = this.props
 
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${bookData.imageLinks.thumbnail})` }}></div>
           <div className="book-shelf-changer">
-            <select>
+            <select onChange={(e) => updateBook(bookData, e.target.value)} value={bookData.shelf}>
               <option value="none" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>

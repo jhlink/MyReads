@@ -11,7 +11,7 @@ class Bookshelf extends React.Component {
 
   render() {
 
-    const { books, shelfTitle } = this.props
+    const { books, shelfTitle, updateBookRequest } = this.props
 
     return (
       <div className="bookshelf">
@@ -19,7 +19,7 @@ class Bookshelf extends React.Component {
         <div className="bookshelf-books">
           <ol className="books-grid">
               {books.map((b) => (
-                <li key={b.id}><Book bookData={b} /></li>
+                <li key={b.id}><Book bookData={b} updateBook={updateBookRequest} /></li>
               ))}
           </ol>
         </div>
