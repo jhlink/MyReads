@@ -3,7 +3,6 @@ import ListBooks from './ListBooks'
 import SearchBooks from './SearchBooks'
 import * as BooksAPI from './BooksAPI'
 import update from 'immutability-helper'
-
 import './App.css'
 
 class BooksApp extends Component {
@@ -20,20 +19,20 @@ class BooksApp extends Component {
 
   componentDidMount() {
     BooksAPI.getAll()
-      .then((books) => {
-        this.setState({ books })
-      })
+     .then((books) => {
+       this.setState({ books })
+     })
   }
 
   onUpdate = (book, shelf) => {
     BooksAPI.update(book, shelf)
-      .then(() => {
-        this.setState((state) => ({
-          /* FLAG: Is this truly the best way to update a state?
-          *  There is a mix of solutions from using map to immutability-helper.
-          *  What is a good rule of thumb here?
-          */
-          books: state.books.map((c) => c.id === book.id ? update(c, {shelf: {$set: shelf}}) : c)
+    .then(() => {
+      this.setState((state) => ({
+        /* FLAG: Is this truly the best way to update a state?
+        *  There is a mix of solutions from using map to immutability-helper.
+        *  What is best practice?
+        */
+        books: state.books.map((c) => c.id === book.id ? update(c, {shelf: {$set: shelf}}) : c)
       }))
     })
   }
@@ -44,7 +43,7 @@ class BooksApp extends Component {
     return (
       <div className="app">
         {this.state.showSearchPage ?
-          <SearchBooks />
+          <SearchBooks bookArray={books} updateBookInServer={this.onUpdate}/>
           :
           <ListBooks bookArray={books} updateBookInServer={this.onUpdate} />
         }
