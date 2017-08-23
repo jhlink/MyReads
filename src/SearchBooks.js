@@ -35,6 +35,8 @@ class SearchBooks extends Component {
     const { bookArray, updateBookInServer } = this.props;
     const { query } = this.state;
 
+    let volatileBookArray = query.length === 0 ? [] : bookArray
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -60,7 +62,7 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {bookArray.map(b =>
+            {volatileBookArray.map(b =>
               <li key={b.id}>
                 <Book bookData={b} updateBook={updateBookInServer} />
               </li>
