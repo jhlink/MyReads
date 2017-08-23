@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Image from 'react-image'
 
 class Book extends Component {
 
@@ -12,12 +13,12 @@ class Book extends Component {
 
     const { bookData, updateBook } = this.props
 
-    let bookImage = bookData.imageLinks ? bookData.imageLinks.thumbnail : ""
+    let bookImageURL = bookData.imageLinks ? bookData.imageLinks.thumbnail : ""
 
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${bookImage})` }}></div>
+          <Image className="book-cover" src={bookImageURL}/>
           <div className="book-shelf-changer">
             <select onChange={(e) => updateBook(bookData, e.target.value)} value={bookData.shelf}>
               <option value="none" disabled>Move to...</option>
