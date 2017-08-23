@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
 import PropTypes from 'prop-types'
 import Book from './Book'
 
@@ -8,15 +7,26 @@ class SearchBooks extends Component {
 
   static propTypes = {
     bookArray: PropTypes.array.isRequired,
-    updateBookInServer: PropTypes.func.isRequired
+    updateBookInServer: PropTypes.func.isRequired,
+    searchQuery: PropTypes.func.isRequired,
+    reloadBooks: PropTypes.func.isRequired
   }
 
   state = {
     query: ""
   }
 
+  componentWillUnmount() {
+    // This is necessary to notify the root node to make a request for books
+    //  in case new books were added to the shelves.
+    this.props.reloadBooks()
+  }
+
   updateQuery = (inputQuery) => {
     this.setState({ query: inputQuery.trim() })
+    if (inputQuery.trim().length > 0) {
+      this.props.searchQuery(inputQuery.trim())
+    }
   }
 
   render() {
@@ -24,10 +34,9 @@ class SearchBooks extends Component {
     const { bookArray, updateBookInServer } = this.props
     const { query } = this.state
 
-    let queriedResult = bookArray
-    if (query) {
-      const match = new RegExp(escapeRegExp(query), 'i')
-      queriedResult = bookArray.filter((book) => match.test(book.title))
+    let queriedResult = bookArray;
+    if (!bookArray.length || !query.length === 0) {
+      queriedResult = []
     }
 
     return(

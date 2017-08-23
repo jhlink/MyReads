@@ -17,13 +17,6 @@ class BooksApp extends Component {
     books: []
   }
 
-  componentDidMount() {
-    BooksAPI.getAll()
-     .then((books) => {
-       this.setState({ books })
-     })
-  }
-
   onUpdate = (book, shelf) => {
     BooksAPI.update(book, shelf)
     .then(() => {
@@ -37,16 +30,43 @@ class BooksApp extends Component {
     })
   }
 
+  onSearch = (searchQuery) => {
+    BooksAPI.search(searchQuery, 30)
+    .then((books) => {
+      let sanitizedBooks = books.error ? [] : books
+      this.setState({ books: sanitizedBooks })
+    })
+  }
+
+  onRefresh = () => {
+    BooksAPI.getAll()
+      .then((books) => {
+        this.setState({ books })
+      });
+  }
+
+  componentDidMount() {
+    this.onRefresh()
+  }
+
   render() {
     const { books } = this.state
 
     return (
       <div className="app">
           <Route exact path="/" render={() => (
-            <ListBooks bookArray={books} updateBookInServer={this.onUpdate} />
+            <ListBooks
+              bookArray={books}
+              updateBookInServer={this.onUpdate}
+            />
           )}/>
           <Route path="/search" render={() => (
-            <SearchBooks bookArray={books} updateBookInServer={this.onUpdate} />
+            <SearchBooks
+              bookArray={books}
+              updateBookInServer={this.onUpdate}
+              searchQuery={this.onSearch}
+              reloadBooks={this.onRefresh}
+            />
           )}/>
       </div>
     )
