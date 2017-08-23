@@ -45,6 +45,10 @@ class BooksApp extends Component {
       });
   }
 
+  onClear = () => {
+    this.setState({ books: []})
+  }
+
   componentDidMount() {
     this.onRefresh()
   }
@@ -66,6 +70,7 @@ class BooksApp extends Component {
               updateBookInServer={this.onUpdate}
               searchQuery={this.onSearch}
               reloadBooks={this.onRefresh}
+              clearResults={this.onClear}
             />
           )}/>
       </div>

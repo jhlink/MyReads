@@ -9,7 +9,8 @@ class SearchBooks extends Component {
     bookArray: PropTypes.array.isRequired,
     updateBookInServer: PropTypes.func.isRequired,
     searchQuery: PropTypes.func.isRequired,
-    reloadBooks: PropTypes.func.isRequired
+    reloadBooks: PropTypes.func.isRequired,
+    clearResults: PropTypes.func.isRequired
   }
 
   state = {
@@ -26,6 +27,8 @@ class SearchBooks extends Component {
     this.setState({ query: inputQuery.trim() })
     if (inputQuery.trim().length > 0) {
       this.props.searchQuery(inputQuery.trim())
+    } else {
+      this.props.clearResults()
     }
   }
 
@@ -33,11 +36,6 @@ class SearchBooks extends Component {
 
     const { bookArray, updateBookInServer } = this.props
     const { query } = this.state
-
-    let queriedResult = bookArray;
-    if (!bookArray.length || !query.length === 0) {
-      queriedResult = []
-    }
 
     return(
       <div className="search-books">
@@ -60,7 +58,7 @@ class SearchBooks extends Component {
           </div>
           <div className="search-books-results">
             <ol className="books-grid">
-              {queriedResult.map((b) => (
+              {bookArray.map((b) => (
                 <li key={b.id}><Book bookData={b} updateBook={updateBookInServer} /></li>
               ))}
             </ol>
