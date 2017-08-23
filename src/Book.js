@@ -12,10 +12,12 @@ class Book extends Component {
 
     const { bookData, updateBook } = this.props
 
+    let bookImage = bookData.imageLinks ? bookData.imageLinks.thumbnail : ""
+
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${bookData.imageLinks.thumbnail})` }}></div>
+          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${bookImage})` }}></div>
           <div className="book-shelf-changer">
             <select onChange={(e) => updateBook(bookData, e.target.value)} value={bookData.shelf}>
               <option value="none" disabled>Move to...</option>
