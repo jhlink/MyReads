@@ -32,14 +32,18 @@ class BooksApp extends Component {
     });
   };
 
-  onRefresh = () => {
+  getAllBooks() {
     BooksAPI.getAll().then(books => {
       this.setState({ books });
     });
+  }
+
+  onRefresh = () => {
+    this.getAllBooks();
   };
 
   componentDidMount() {
-    this.onRefresh();
+    this.getAllBooks();
   }
 
   render() {
