@@ -22,6 +22,10 @@ class BooksApp extends Component {
       this.setState(state => ({
         booksInShelf: state.booksInShelf.map(
           c => (c.id === book.id ? update(c, { shelf: { $set: shelf } }) : c)
+        ),
+
+        bookSearchResult: state.bookSearchResult.map(
+          c => (c.id === book.id ? update(c, { shelf: { $set: shelf } }) : c)
         )
       }));
     });
@@ -44,7 +48,7 @@ class BooksApp extends Component {
 
   getAllBooks() {
     //  In accordance to the DRY principle, I wanted to define this function once
-    //    and call the function in needed areas. 
+    //    and call the function in needed areas.
     BooksAPI.getAll().then(books => {
       this.setState({ booksInShelf: books });
     });

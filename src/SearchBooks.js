@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Book from './Book'
 import Debounce from 'lodash/debounce'
-import update from 'immutability-helper'
 
 class SearchBooks extends Component {
 
@@ -26,8 +25,8 @@ class SearchBooks extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let oldProps = update(this.props.bookArray, {$unset: nextProps.bookArray})
-    if (oldProps.length === 0) {
+    if (nextProps.length === 0) {
+      console.log(nextProps.bookArray)
       this.setState({ clearResult: true })
     } else {
       this.setState({ clearResult: false })
