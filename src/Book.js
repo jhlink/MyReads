@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Image from "react-image";
 
 const Book = (props) => {
   const { bookData, updateBook } = props;
@@ -10,7 +9,7 @@ const Book = (props) => {
   return (
     <div className="book">
       <div className="book-top">
-        <Image className="book-cover" src={bookImageURL} />
+        <img className="book-cover" src={bookImageURL} alt={bookData.title} />
         <div className="book-shelf-changer">
           <select
             onChange={e => updateBook(bookData, e.target.value)}
