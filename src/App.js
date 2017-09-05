@@ -8,7 +8,8 @@ import "./App.css";
 
 class BooksApp extends Component {
   state = {
-    books: []
+    bookSearchResult: [],
+    booksInShelf: []
   };
 
   onUpdate = (book, shelf) => {
@@ -18,7 +19,7 @@ class BooksApp extends Component {
         *  There is a mix of solutions from using map to immutability-helper.
         *  What is best practice?
         */
-        books: state.books.map(
+        booksInShelf: state.booksInShelf.map(
           c => (c.id === book.id ? update(c, { shelf: { $set: shelf } }) : c)
         )
       }));
@@ -28,13 +29,21 @@ class BooksApp extends Component {
   onSearch = searchQuery => {
     BooksAPI.search(searchQuery, 30).then(books => {
       let sanitizedBooks = books.error ? [] : books;
-      this.setState({ books: sanitizedBooks });
+
+      this.setState({
+        bookSearchResult: sanitizedBooks.map(book => {
+          let targetBook = this.state.booksInShelf.find(
+            (bookParam) => book.id === bookParam.id
+          );
+          return targetBook ? update(book, { $merge: targetBook }) : book;
+        })
+      });
     });
   };
 
   getAllBooks() {
     BooksAPI.getAll().then(books => {
-      this.setState({ books });
+      this.setState({ booksInShelf: books });
     });
   }
 
@@ -47,7 +56,7 @@ class BooksApp extends Component {
   }
 
   render() {
-    const { books } = this.state;
+    const { bookSearchResult, booksInShelf } = this.state;
 
     return (
       <div className="app">
@@ -55,13 +64,16 @@ class BooksApp extends Component {
           exact
           path="/"
           render={() =>
-            <ListBooks bookArray={books} updateBookInServer={this.onUpdate} />}
+            <ListBooks
+              bookArray={booksInShelf}
+              updateBookInServer={this.onUpdate}
+            />}
         />
         <Route
           path="/search"
           render={() =>
             <SearchBooks
-              bookArray={books}
+              bookArray={bookSearchResult}
               updateBookInServer={this.onUpdate}
               searchQuery={this.onSearch}
               reloadBooks={this.onRefresh}
