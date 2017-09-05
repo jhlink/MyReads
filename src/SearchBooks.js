@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Book from './Book'
+import Debounce from 'lodash/debounce'
+import update from 'immutability-helper'
 
 class SearchBooks extends Component {
 
@@ -10,11 +12,11 @@ class SearchBooks extends Component {
     updateBookInServer: PropTypes.func.isRequired,
     searchQuery: PropTypes.func.isRequired,
     reloadBooks: PropTypes.func.isRequired,
-    clearResults: PropTypes.func.isRequired
   }
 
   state = {
-    query: ""
+    query: "",
+    clearResult: true
   }
 
   componentWillUnmount() {
@@ -23,31 +25,38 @@ class SearchBooks extends Component {
     this.props.reloadBooks()
   }
 
-  updateQuery = (inputQuery) => {
-    this.setState({ query: inputQuery.trim() })
-    /* Could the following `inputQuery.trim()` be replaced with this.state.query
-     *  without worrying about whether the state will be updated fast enough?
-     *  Specifically, my concern is that calling changing the state via setState
-     *  will take time. Therefore, if there is any other part of the component
-     *  that relies on frequently reading (or in the worst case scenario polling)
-     *  the state, there could be a possibility that the read state could be stale. 
-     */
-    if (inputQuery.trim().length > 0) {
-      this.props.searchQuery(inputQuery.trim())
+  componentWillReceiveProps(nextProps) {
+    let oldProps = this.props.bookArray
+    oldProps = update(oldProps, {$unset: nextProps.bookArray})
+    if (oldProps.length === 0) {
+      this.setState({ clearResult: true })
     } else {
-      this.props.clearResults();
+      this.setState({ clearResult: false })
     }
+  }
+
+  deb =  Debounce((inputQuery) => {
+      if (inputQuery.length > 0) {
+
+        console.log("Searching " + inputQuery)
+        this.props.searchQuery(inputQuery)
+      } else {
+        console.log("Clear Results")
+        this.setState({ clearResult: true })
+      }
+    }, 200)
+
+  updateQuery = (inputQuery) => {
+    this.setState({ query: inputQuery })
+    this.deb(inputQuery.trim())
   }
 
   render() {
 
     const { bookArray, updateBookInServer } = this.props
-    const { query } = this.state
+    const { query, clearResult } = this.state
 
-    let queriedResult = bookArray;
-    if (!bookArray.length || !query.length) {
-      queriedResult = []
-    }
+    let queriedResult = clearResult ? [] : bookArray;
 
     return(
       <div className="search-books">
