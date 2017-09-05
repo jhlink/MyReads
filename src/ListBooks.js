@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Bookshelf from "./Bookshelf";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
