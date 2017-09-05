@@ -26,8 +26,7 @@ class SearchBooks extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let oldProps = this.props.bookArray
-    oldProps = update(oldProps, {$unset: nextProps.bookArray})
+    let oldProps = update(this.props.bookArray, {$unset: nextProps.bookArray})
     if (oldProps.length === 0) {
       this.setState({ clearResult: true })
     } else {
