@@ -5,6 +5,7 @@ import Image from "react-image";
 const Book = (props) => {
   const { bookData, updateBook } = props;
   let bookImageURL = bookData.imageLinks ? bookData.imageLinks.thumbnail : "";
+  let bookShelfStatus = bookData.shelf ? bookData.shelf : "none";
 
   return (
     <div className="book">
@@ -13,9 +14,9 @@ const Book = (props) => {
         <div className="book-shelf-changer">
           <select
             onChange={e => updateBook(bookData, e.target.value)}
-            value={bookData.shelf}
+            value={bookShelfStatus}
           >
-            <option value="none" disabled>
+            <option value="toMove" disabled>
               Move to...
             </option>
             <option value="currentlyReading">Currently Reading</option>
