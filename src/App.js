@@ -15,10 +15,6 @@ class BooksApp extends Component {
   onUpdate = (book, shelf) => {
     BooksAPI.update(book, shelf).then(() => {
       this.setState(state => ({
-        /* FLAG: Is this truly the best way to update a state?
-        *  There is a mix of solutions from using map to immutability-helper.
-        *  What is best practice?
-        */
         booksInShelf: state.booksInShelf.map(
           c => (c.id === book.id ? update(c, { shelf: { $set: shelf } }) : c)
         )
