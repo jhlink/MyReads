@@ -8,6 +8,11 @@ import "./App.css";
 
 class BooksApp extends Component {
   state = {
+
+    //  A second array was added because the 'search' API call does not
+    //    return the 'shelf' JSON property. As a result, a second array is used
+    //    to track what books are shelved and is merged into the result
+    //    of search query.
     bookSearchResult: [],
     booksInShelf: []
   };
@@ -38,6 +43,8 @@ class BooksApp extends Component {
   };
 
   getAllBooks() {
+    //  In accordance to the DRY principle, I wanted to define this function once
+    //    and call the function in needed areas. 
     BooksAPI.getAll().then(books => {
       this.setState({ booksInShelf: books });
     });
